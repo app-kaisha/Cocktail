@@ -9,13 +9,23 @@
 import SwiftUI
 
 struct ListView: View {
+    
+    private var drinks = ["Swifty Sunrise", "Baldwin at the Beach", "Eagle Eggnog", "Mods Mudslide"]
+    
     var body: some View {
-        VStack {
-            Text("Cocktail!")
+        NavigationStack {
+            List(drinks, id: \.self) { drink in
+                Text(drink)
+                    .font(.title)
+            }
+            .listStyle(.plain)
+            .navigationTitle("Cocktails")
         }
     }
 }
 
 #Preview {
-    ListView()
+    NavigationStack {
+        ListView()
+    }
 }
