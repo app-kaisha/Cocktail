@@ -15,8 +15,12 @@ struct ListView: View {
     var body: some View {
         NavigationStack {
             List(drinks, id: \.self) { drink in
-                Text(drink)
-                    .font(.title)
+                NavigationLink {
+                    DetailView(drink: drink)
+                } label: {
+                    Text(drink)
+                        .font(.title)
+                }
             }
             .listStyle(.plain)
             .navigationTitle("Cocktails")
