@@ -10,20 +10,23 @@ import SwiftUI
 
 struct ListView: View {
     
-    private var drinks = ["Swifty Sunrise", "Baldwin at the Beach", "Eagle Eggnog", "Mods Mudslide"]
+    @State private var drinks = Drinks()
     
     var body: some View {
         NavigationStack {
-            List(drinks, id: \.self) { drink in
+            List(drinks.drinksArray) { drink in
                 NavigationLink {
-                    DetailView(drink: drink)
+                    DetailView(drink: drink.strDrink)
                 } label: {
-                    Text(drink)
+                    Text(drink.strDrink)
                         .font(.title)
                 }
             }
             .listStyle(.plain)
             .navigationTitle("Cocktails")
+        }
+        .task {
+            await drinks.getData()
         }
     }
 }
