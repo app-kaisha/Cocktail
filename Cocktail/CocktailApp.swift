@@ -10,9 +10,13 @@ import SwiftUI
 
 @main
 struct CocktailApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListView()
+                .onAppear {
+                    Thread.sleep(forTimeInterval: 1)
+                }
         }
     }
 }
