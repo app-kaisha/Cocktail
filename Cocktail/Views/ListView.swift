@@ -16,7 +16,7 @@ struct ListView: View {
         NavigationStack {
             List(drinks.drinksArray) { drink in
                 NavigationLink {
-                    DetailView(drink: drink.strDrink)
+                    DetailView(drink: drink)
                 } label: {
                     Text(drink.strDrink)
                         .font(.title)
