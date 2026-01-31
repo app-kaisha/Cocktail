@@ -11,6 +11,7 @@ import SwiftUI
 struct DetailView: View {
     
     var drink: Drink
+    @State private var ingredientsText = ""
     
     @Environment(\.dismiss) private var dismiss
     
@@ -59,8 +60,10 @@ struct DetailView: View {
                 Text("Ingredients:")
                     .font(.title3).bold()
                     .foregroundStyle(.eggplant)
-                Text("1 oz of awesomeness\n3oz of sauce\n2oz unicorn dust\n1 lemon slice")
-                    .multilineTextAlignment(.leading)
+                ScrollView {
+                    Text(ingredientsText)
+                        .multilineTextAlignment(.leading)
+                }
             }
             
             VStack(alignment: .leading){
@@ -91,10 +94,46 @@ struct DetailView: View {
                 }
             }
         }
+        .onAppear {
+            createIngredientsList()
+        }
     }
+    
+    func addIngredients(measure: String?, ingredient: String?) {
+        guard measure != nil,  ingredient != nil else { return }
+        ingredientsText += "\(measure!) \(ingredient!)\n"
+    }
+    
+    func createIngredientsList() {
+        ingredientsText = ""
+        
+        addIngredients(measure: drink.strMeasure1, ingredient: drink.strIngredient1)
+        addIngredients(measure: drink.strMeasure2, ingredient: drink.strIngredient2)
+        addIngredients(measure: drink.strMeasure3, ingredient: drink.strIngredient3)
+        addIngredients(measure: drink.strMeasure4, ingredient: drink.strIngredient4)
+        addIngredients(measure: drink.strMeasure5, ingredient: drink.strIngredient5)
+        addIngredients(measure: drink.strMeasure6, ingredient: drink.strIngredient6)
+        addIngredients(measure: drink.strMeasure7, ingredient: drink.strIngredient7)
+        addIngredients(measure: drink.strMeasure8, ingredient: drink.strIngredient8)
+        addIngredients(measure: drink.strMeasure9, ingredient: drink.strIngredient9)
+        addIngredients(measure: drink.strMeasure10, ingredient: drink.strIngredient10)
+        addIngredients(measure: drink.strMeasure11, ingredient: drink.strIngredient11)
+        addIngredients(measure: drink.strMeasure12, ingredient: drink.strIngredient12)
+        addIngredients(measure: drink.strMeasure13, ingredient: drink.strIngredient13)
+        addIngredients(measure: drink.strMeasure14, ingredient: drink.strIngredient14)
+        addIngredients(measure: drink.strMeasure15, ingredient: drink.strIngredient15)
+        // clean up last carriage return line feed
+        if ingredientsText != "" {
+            ingredientsText.removeLast()
+        }
+        
+    }
+
 }
 
 #Preview {
+    
+    
     NavigationStack {
         DetailView(drink: Drink(id: "178358", strDrink: "Mango Mojito", strAlcoholic: "Alcoholic", strGlass: "Jar", strInstructions: "Squeeze the juice from 1½ limes and blend with the mango to give a smooth purée.\nCut the rest of the limes into quarters, and then cut each wedge in half again. Put 2 pieces of lime in a highball glass for each person and add 1 teaspoon of caster sugar and 5-6 mint leaves to each glass. Squish everything together with a muddler or the end of a rolling pin to release all the flavours from the lime and mint.\nDivide the mango purée between the glasses and add 30ml white rum and a handful of crushed ice to each one, stirring well to mix everything together. Top up with soda water to serve and garnish with extra mint, if you like.", strDrinkThumb: "https://www.thecocktaildb.com/images/media/drink/wfqmgm1630406820.jpg"))
     }
