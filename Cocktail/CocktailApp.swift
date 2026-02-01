@@ -11,10 +11,18 @@ import SwiftUI
 @main
 struct CocktailApp: App {
     
+    
+    @State private var drinksVM = Drinks()
+    
     var body: some Scene {
         WindowGroup {
             ListView()
+                .environment(drinksVM)
+                .task {
+                    await drinksVM.loadAllData()
+                }
                 .onAppear {
+
                     Thread.sleep(forTimeInterval: 1)
                 }
         }

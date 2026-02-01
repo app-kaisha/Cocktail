@@ -14,13 +14,18 @@ class Drinks {
         var drinks: [Drink]
     }
     
+    let alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "v", "w", "y", "z"]
+    var alphabetIndex = 0
+    let urlBase = "https://www.thecocktaildb.com/api/json/v1/1/search.php?f="
     var urlString = "https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a"
     
     var drinksArray: [Drink] = []
-    
+    var count: Int { drinksArray.count }
     var isLoading = false
     
-    func getData() async {
+    func getData(letter: String) async {
+        
+        guard alphabetIndex < (alphabet.count) else { return }
         
         isLoading = true
         print("🕸️ We are accessing the url \(urlString)")
@@ -32,11 +37,6 @@ class Drinks {
         }
         
         do {
-            // if issues in simulator to get data...
-            // let configuration = URLSessionConfiguration.ephemeral
-            // let session = URLSession(configuration: configuration)
-            // let (data, _) = try await session.data(from: url)
-            
             let (data, _) = try await URLSession.shared.data(from: url)
             
             // decode JSON into data structure
@@ -50,8 +50,11 @@ class Drinks {
             print("😎 JSON returned! Drinks count: \(response.drinks.count)")
             // print("😎 JSON returned! Drinks id1: \(returned.drinks[0].id)")
             Task { @MainActor in
-                self.drinksArray = response.drinks
-                
+                self.drinksArray = self.drinksArray + response.drinks
+                self.alphabetIndex += 1
+                if alphabetIndex < (alphabet.count) {
+                    self.urlString = self.urlBase + self.alphabet[alphabetIndex]
+                }
                 isLoading = false
             }
         } catch {
@@ -59,4 +62,22 @@ class Drinks {
             print("😡 ERROR: Could not get data from \(urlString) \(error.localizedDescription)")
         }
     }
+    
+    func loadAllData() async {
+        
+        Task { @MainActor in
+            // guard for end of range
+            guard alphabetIndex < (alphabet.count) else { return }
+            await getData(letter: alphabet[alphabetIndex])
+            await loadAllData()
+        }
+    }
+    
+    func saveReview(drink: Drink) {
+        guard let index = drinksArray.firstIndex(where: { $0.id == drink.id }) else {
+            return
+        }
+        drinksArray[index].rating = drink.rating
+    }
+    
 }

@@ -10,12 +10,11 @@ import SwiftUI
 
 struct DetailView: View {
     
-    var drink: Drink
+    @State var drink: Drink
     @State private var ingredientsText = ""
     
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var rating = ""
+    @Environment(Drinks.self) private var drinksVM
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20.0) {
@@ -30,10 +29,11 @@ struct DetailView: View {
                     Text("Rating (1-10):")
                         .bold()
                         .foregroundStyle(.eggplant)
-                    TextField("-", text: $rating)
+                    TextField("-", value: $drink.rating, formatter: NumberFormatter())
                         .font(.title)
                         .multilineTextAlignment(.center)
                         .textFieldStyle(.roundedBorder)
+                        .keyboardType(.numberPad)
                 }
             }
             
@@ -76,8 +76,7 @@ struct DetailView: View {
                     
                 }
             }
-    
-            
+
             Spacer()
         }
         .padding(.horizontal)
@@ -90,6 +89,8 @@ struct DetailView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
+                    drinksVM.saveReview(drink: drink)
+                    
                     dismiss()
                 }
             }
@@ -135,7 +136,8 @@ struct DetailView: View {
     
     
     NavigationStack {
-        DetailView(drink: Drink(id: "178358", strDrink: "Mango Mojito", strAlcoholic: "Alcoholic", strGlass: "Jar", strInstructions: "Squeeze the juice from 1½ limes and blend with the mango to give a smooth purée.\nCut the rest of the limes into quarters, and then cut each wedge in half again. Put 2 pieces of lime in a highball glass for each person and add 1 teaspoon of caster sugar and 5-6 mint leaves to each glass. Squish everything together with a muddler or the end of a rolling pin to release all the flavours from the lime and mint.\nDivide the mango purée between the glasses and add 30ml white rum and a handful of crushed ice to each one, stirring well to mix everything together. Top up with soda water to serve and garnish with extra mint, if you like.", strDrinkThumb: "https://www.thecocktaildb.com/images/media/drink/wfqmgm1630406820.jpg"))
+        DetailView(drink: Drink(idDrink: "123", strDrink: "Mango Mojito", strAlcoholic: "Alcoholic", strGlass: "Jar", strInstructions: "Squeeze the juice from 1½ limes and blend with the mango to give a smooth purée.\nCut the rest of the limes into quarters, and then cut each wedge in half again. Put 2 pieces of lime in a highball glass for each person and add 1 teaspoon of caster sugar and 5-6 mint leaves to each glass. Squish everything together with a muddler or the end of a rolling pin to release all the flavours from the lime and mint.\nDivide the mango purée between the glasses and add 30ml white rum and a handful of crushed ice to each one, stirring well to mix everything together. Top up with soda water to serve and garnish with extra mint, if you like.", strDrinkThumb: "https://www.thecocktaildb.com/images/media/drink/wfqmgm1630406820.jpg"))
+            .environment(Drinks())
     }
 }
 

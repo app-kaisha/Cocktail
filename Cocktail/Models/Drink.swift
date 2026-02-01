@@ -10,7 +10,8 @@
 import Foundation
 
 struct Drink: Codable, Identifiable {
-    var id: String
+    var id = UUID().uuidString
+    var idDrink: String
     var strDrink: String
     var strAlcoholic: String?
     var strGlass: String?
@@ -48,9 +49,10 @@ struct Drink: Codable, Identifiable {
     var strMeasure14: String?
     var strMeasure15: String?
     
+    var rating: Int = 0
     
     enum CodingKeys: String, CodingKey {
-        case id = "idDrink"
+        case idDrink
         case strDrink
         case strAlcoholic
         case strGlass

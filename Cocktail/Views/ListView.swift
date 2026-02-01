@@ -9,30 +9,46 @@
 import SwiftUI
 
 struct ListView: View {
-    
-    @State private var drinks = Drinks()
+
+    @Environment(Drinks.self) private var drinksVM
     
     var body: some View {
+        
         NavigationStack {
-            List(drinks.drinksArray) { drink in
-                NavigationLink {
-                    DetailView(drink: drink)
-                } label: {
-                    Text(drink.strDrink)
-                        .font(.title)
+            ZStack {
+                List (drinksVM.drinksArray) { drink in
+                    LazyVStack {
+                        NavigationLink {
+                            DetailView(drink: drink)
+                                .environment(drinksVM)
+                        } label: {
+                            HStack{
+                                Text(drink.strDrink)
+                                    .font(.title)
+                                Spacer()
+                                Text(drink.rating > 0 ? "\(drink.rating) " : "")
+                                    .bold()
+                            }
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .navigationTitle("Cocktails")
+                .toolbar {
+                    ToolbarItemGroup(placement: .status) {
+                        Text("Drinks Shown: \(drinksVM.count)")
+                    }
                 }
             }
-            .listStyle(.plain)
-            .navigationTitle("Cocktails")
-        }
-        .task {
-            await drinks.getData()
+            
         }
     }
+    
 }
 
 #Preview {
     NavigationStack {
         ListView()
+            .environment(Drinks())
     }
 }
